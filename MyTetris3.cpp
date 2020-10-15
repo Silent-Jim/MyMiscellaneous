@@ -1,11 +1,3 @@
-/*
-环境 vs2019
-思路 每一层 都由一个 unsigned short  二进制表示
-block 将每种方块的每种形态按层用一个unsigned short  二进制表示
-  #      01000000    2
-###    11100000     7
-碰撞检测 将每层做与运算不为0则碰撞
-*/
 //#include "pch.h"
 #include <windows.h>
 #include <conio.h>
@@ -25,7 +17,7 @@ int check(int nx, int ny) { //检查是否碰撞
 void display() { //显示
 	system("cls");//清屏输出
 	F(i, 0, N) {
-		int nr = N - 1 - i; 
+		int nr = N - 1 - i;
 		us temp = yy <= nr && nr < yy + 4 ? map[nr] | (blk[nr - yy] << xx) : map[nr]; //temp 某一层的显示 下落方块与固定方块取并集
 		F(j, 0, 16) (temp >> j) & 1 ? putchar('#') : putchar(' '); putchar('\n');
 	}
@@ -41,7 +33,7 @@ int main() {
 			if (_kbhit()) {
 				switch (_getch()) {
 				case 75: if (check(xx - 1, yy))xx--; break; //左移
-				case 77: if (check(xx + 1, yy))xx++; break; 
+				case 77: if (check(xx + 1, yy))xx++; break;
 				case 72: stat = (stat + 1) % 4; blk = blocks[typ][stat]; break; //改变形态
 				case 80:  flg = 0; break; //中断输入下落加速
 				}
@@ -51,11 +43,11 @@ int main() {
 		if (check(xx, yy - 1))yy--; //下落
 		else {
 			F(i, 0, 4) map[yy + i] = (blk[i] << xx) | map[yy + i]; //触底方块进行固定到map
-			int nr = 1, ecnt = 0; 
+			int nr = 1, ecnt = 0;
 			while (nr < N) { //消除
-				map[nr - ecnt] = map[nr];
-				if (map[nr] == 65535)ecnt++;
-				nr++;
+				if (map[nr] == 65535)ecnt++; //如果该层满 跳过并统计行数
+				else map[nr - ecnt] = map[nr]; //掉落到消去行数之前的层
+				nr++; //当前行递增
 			}
 			yy = N - 4; //重置yy
 		}
