@@ -2,8 +2,8 @@
 环境 vs2019
 思路 每一层 都由一个 unsigned short  二进制表示
 block 将每种方块的每种形态按层用一个unsigned short  二进制表示
-  #      01000000
-###    11100000
+  #      01000000    2
+###    11100000     7
 碰撞检测 将每层做与运算不为0则碰撞
 */
 //#include "pch.h"
@@ -22,7 +22,7 @@ int check(int nx, int ny) { //检查是否碰撞
 	F(i, 0, 4)if ((blk[i] << nx) & map[ny + i])return 0;
 	return 1;
 }
-void display() { 显示
+void display() { //显示
 	system("cls");//清屏输出
 	F(i, 0, N) {
 		int nr = N - 1 - i; 
